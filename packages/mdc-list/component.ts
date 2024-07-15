@@ -43,11 +43,11 @@ export class MDCList extends MDCComponent<MDCListFoundation> {
   private cachedListElements: Array<HTMLElement>|null; // reset in layout(), assigned in listElements()
   
   get listElements() {
-    if (!cachedListElements) {
-      cachedListElements = Array.from(this.root.querySelectorAll<HTMLElement>(
+    if (!this.cachedListElements) {
+      this.cachedListElements = Array.from(this.root.querySelectorAll<HTMLElement>(
         `.${this.classNameMap[cssClasses.LIST_ITEM_CLASS]}`));
     }
-    return cachedListElements;
+    return this.cachedListElements;
   }
 
   set wrapFocus(value: boolean) {
@@ -137,10 +137,11 @@ export class MDCList extends MDCComponent<MDCListFoundation> {
     this.unlisten('click', this.handleClick);
     this.unlisten('focusin', this.focusInEventListener);
     this.unlisten('focusout', this.focusOutEventListener);
+    this.cachedListElements = null;
   }
 
   layout() {
-    cachedListElements = null;
+    this.cachedListElements = null;
     const direction = this.root.getAttribute(strings.ARIA_ORIENTATION);
     this.vertical = direction !== strings.ARIA_ORIENTATION_HORIZONTAL;
 
