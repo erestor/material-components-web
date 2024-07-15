@@ -40,9 +40,14 @@ export class MDCList extends MDCComponent<MDCListFoundation> {
     this.foundation.setVerticalOrientation(value);
   }
 
+  private cachedListElements: Array<HTMLElement>|null; // reset in layout(), assigned in listElements()
+  
   get listElements() {
-    return Array.from(this.root.querySelectorAll<HTMLElement>(
+    if (!cachedListElements) {
+      cachedListElements = Array.from(this.root.querySelectorAll<HTMLElement>(
         `.${this.classNameMap[cssClasses.LIST_ITEM_CLASS]}`));
+    }
+    return cachedListElements;
   }
 
   set wrapFocus(value: boolean) {
@@ -135,6 +140,7 @@ export class MDCList extends MDCComponent<MDCListFoundation> {
   }
 
   layout() {
+    cachedListElements = null;
     const direction = this.root.getAttribute(strings.ARIA_ORIENTATION);
     this.vertical = direction !== strings.ARIA_ORIENTATION_HORIZONTAL;
 
